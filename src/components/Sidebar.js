@@ -1,42 +1,37 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 
 import VoiceChatIcon from '../assets/icons/chat-voice-icon.svg';
 import ChatIcon from '../assets/icons/chat-icon.svg';
 import GamepadIcon from '../assets/icons/gamepad-icon.svg';
 import HomeIcon from '../assets/icons/home-icon.svg';
 
-const Sidebar = () => {
+const Tab = ({ name, path, icon, activeTab, location }) => {
+	const active = activeTab === path ? 'active' : null;
+
+	return (
+		<Link to={path} className={active}>
+			<button>
+				<img src={icon} alt={name} />
+			</button>
+			{name}
+		</Link>
+	);
+};
+
+const Sidebar = ({ location }) => {
+	const activeTab = location.pathname;
+
 	return (
 		<div className='sidebar-component'>
-			<div className='list'>
-				<Link to='/'>
-					<button>
-						<img src={HomeIcon} alt='home' />
-					</button>
-					Home
-				</Link>
-				<Link to='/games'>
-					<button>
-						<img src={GamepadIcon} alt='games' />
-					</button>
-					Games
-				</Link>
-				<Link to='/chat'>
-					<button>
-						<img src={ChatIcon} alt='chat' />
-					</button>
-					Chat
-				</Link>
-				<Link to='/voice-chat'>
-					<button>
-						<img src={VoiceChatIcon} alt='voice chat' />
-					</button>
-					Voice chat
-				</Link>
+			<div className='sidebar-tabs'>
+				<Tab path='/' name='Home' icon={HomeIcon} activeTab={activeTab} />
+				<Tab path='/games' name='Games' icon={GamepadIcon} activeTab={activeTab} />
+				<Tab path='/chat' name='Chat' icon={ChatIcon} activeTab={activeTab} />
+				<Tab path='/voice-chat' name='Voice chat' icon={VoiceChatIcon} activeTab={activeTab} />
 			</div>
 		</div>
 	);
 };
 
-export default Sidebar;
+export default withRouter(Sidebar);

@@ -120,21 +120,22 @@ a {
 	padding-top: 30px;
 	box-sizing: border-box;
 
-	.list {
+	.sidebar-tabs {
 		
 		a {
 			display: flex;
 			align-items: center;
 			font-size: 0.85em;
 			cursor: pointer;
-			padding: 4px 10px;
-			border-radius: 5px;
+			padding: 6px 10px;
+			border-left: 4px solid transparent;
 
 			&:not(:last-of-type) {
 				margin-bottom: 10px;
 			}
 
-			&:hover {
+			&.active {
+				border-left: 4px solid #0072ce;
 				background-color: #479ee679;
 			}
 

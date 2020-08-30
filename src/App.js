@@ -11,6 +11,8 @@ import 'notyf/notyf.min.css';
 
 import Home from './pages/Home';
 import VoiceChat from './pages/VoiceChat';
+import TextChat from './pages/TextChat';
+import Games from './pages/Games';
 import ForgotPassword from './pages/AuthScreens/ForgotPassword';
 import ConfirmAccount from './pages/AuthScreens/ConfirmAccount';
 import SignIn from './pages/AuthScreens/SignIn';
@@ -26,7 +28,9 @@ const App = () => {
 				<div className='pages-container'>
 					<Switch>
 						<ProtectedRoute exact path='/' component={Home} />
-						<ProtectedRoute exact path='/voice-chat' component={VoiceChat} />
+						<ProtectedRoute path='/voice-chat' component={VoiceChat} />
+						<ProtectedRoute path='/text-chat' component={TextChat} />
+						<ProtectedRoute path='/games' component={Games} />
 						<PublicRoute path='/sign-up' component={SignUp} restricted={true} />
 						<PublicRoute path='/sign-in' component={SignIn} restricted={true} />
 						<PublicRoute path='/confirm-account' component={ConfirmAccount} restricted={true} />
