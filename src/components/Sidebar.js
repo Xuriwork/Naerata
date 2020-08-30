@@ -6,7 +6,7 @@ import ChatIcon from '../assets/icons/chat-icon.svg';
 import GamepadIcon from '../assets/icons/gamepad-icon.svg';
 import HomeIcon from '../assets/icons/home-icon.svg';
 
-const Tab = ({ name, path, icon, activeTab, location }) => {
+const Tab = ({ name, path, icon, activeTab }) => {
 	const active = activeTab === path ? 'active' : null;
 
 	return (

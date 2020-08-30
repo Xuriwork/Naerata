@@ -2,8 +2,8 @@ import React from 'react';
 
 const Games = () => {
     return (
-        <div>
-            
+        <div className='games-component'>
+            Games
         </div>
     )
 }

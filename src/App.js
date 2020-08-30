@@ -11,7 +11,7 @@ import 'notyf/notyf.min.css';
 
 import Home from './pages/Home';
 import VoiceChat from './pages/VoiceChat';
-import TextChat from './pages/TextChat';
+import Chat from './pages/Chat';
 import Games from './pages/Games';
 import ForgotPassword from './pages/AuthScreens/ForgotPassword';
 import ConfirmAccount from './pages/AuthScreens/ConfirmAccount';
@@ -29,7 +29,7 @@ const App = () => {
 					<Switch>
 						<ProtectedRoute exact path='/' component={Home} />
 						<ProtectedRoute path='/voice-chat' component={VoiceChat} />
-						<ProtectedRoute path='/text-chat' component={TextChat} />
+						<ProtectedRoute path='/chat' component={Chat} />
 						<ProtectedRoute path='/games' component={Games} />
 						<PublicRoute path='/sign-up' component={SignUp} restricted={true} />
 						<PublicRoute path='/sign-in' component={SignIn} restricted={true} />

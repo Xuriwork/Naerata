@@ -62,7 +62,7 @@ a {
 	}
 }
 
-.home-component, .voice-chat-component {
+.home-component, .voice-chat-component, .chat-component, .games-component {
 	@extend %flex-center-column;
 	width: 100%;
 	height: 100%;
