@@ -27,7 +27,15 @@ a {
 }
 
 .app-component {
+	height: calc(100% - 60px);
+}
+
+.pages-container {
+	width: 100%;
 	height: 100%;
+	position: relative;
+	width: calc(100% - 250px);
+	left: 250px;
 }
 
 .loading-component {
@@ -54,10 +62,10 @@ a {
 	}
 }
 
-.home-component {
+.home-component, .voice-chat-component {
 	@extend %flex-center-column;
 	width: 100%;
-	height: calc(100% - 60px);
+	height: 100%;
 }
 
 .navbar {
@@ -98,6 +106,49 @@ a {
 		.sign-in-button {
 			color: var(--secondary-color);
 			background-color: transparent;
+		}
+	}
+}
+
+.sidebar-component {
+	width: 250px;
+	height: calc(100% - 60px);
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	background-color: #EEEEF4; 
+	padding-top: 30px;
+	box-sizing: border-box;
+
+	.list {
+		
+		a {
+			display: flex;
+			align-items: center;
+			font-size: 0.85em;
+			cursor: pointer;
+			padding: 4px 10px;
+			border-radius: 5px;
+
+			&:not(:last-of-type) {
+				margin-bottom: 10px;
+			}
+
+			&:hover {
+				background-color: #479ee679;
+			}
+
+			button {
+				@extend %flex-center-column;
+				padding: 8px;
+				background-color: #ffffff;
+				margin-right: 5px;
+				border-radius: 8px;
+
+				img {
+					width: 20px;
+				}
+			}
 		}
 	}
 }

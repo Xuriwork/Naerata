@@ -3,7 +3,7 @@ import AgoraRTC from '../utils/AgoraEnchancer';
 import notyf from '../utils/notyf';
 import useMediaStream from '../hooks/useMediaStream';
 import useMicrophone from '../hooks/useMicrophone';
-import Stream from './Stream';
+import Stream from '../components/Stream';
 
 const defaultState = {
 	appId: 'ea06c96d0a2945029805b5b5f7c7984b',
@@ -58,7 +58,7 @@ const reducer = (state = defaultState, action) => {
 	}
 };
 
-const Home = () => {
+const VoiceChat = () => {
 	const [isJoined, setisJoined] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [agoraClient, setClient] = useState(undefined);
@@ -138,7 +138,7 @@ const Home = () => {
 	};
 
 	return (
-		<div className='home-component'>
+		<div className='voice-chat-component'>
 			<div className='join-channel-container'>
 				<div className='input-container'>
 					<label>Channel Name</label>
@@ -163,4 +163,4 @@ const Home = () => {
 	);
 };
 
-export default Home;
+export default VoiceChat;
