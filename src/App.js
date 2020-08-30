@@ -18,6 +18,7 @@ import ConfirmAccount from './pages/AuthScreens/ConfirmAccount';
 import SignIn from './pages/AuthScreens/SignIn';
 import SignUp from './pages/AuthScreens/SignUp';
 import NotFound from './pages/NotFound';
+import Editor from './utils/bigheads/Editor.tsx';
 
 const App = () => {
 	return (
@@ -31,6 +32,7 @@ const App = () => {
 						<ProtectedRoute path='/voice-chat' component={VoiceChat} />
 						<ProtectedRoute path='/chat' component={Chat} />
 						<ProtectedRoute path='/games' component={Games} />
+						<ProtectedRoute path='/settings/character-editor' component={Editor} />
 						<PublicRoute path='/sign-up' component={SignUp} restricted={true} />
 						<PublicRoute path='/sign-in' component={SignIn} restricted={true} />
 						<PublicRoute path='/confirm-account' component={ConfirmAccount} restricted={true} />
