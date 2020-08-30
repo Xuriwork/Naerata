@@ -1,0 +1,11 @@
+{
+    "AppSyncApiName": "naerata",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authnaerata9219b44a",
+            "Outputs.UserPoolId"
+        ]
+    }
+}

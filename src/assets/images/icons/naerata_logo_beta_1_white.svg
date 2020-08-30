@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 500 500" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g transform="matrix(-0.661201,0,0,-0.661201,415.3,298.826)">
+        <path d="M456.522,250L43.478,250C43.478,136.018 136.018,43.478 250,43.478C363.982,43.478 456.522,136.018 456.522,250Z" style="fill:white;"/>
+    </g>
+    <g transform="matrix(0.802905,0,0,0.802905,-35.543,253.692)">
+        <text x="151.063px" y="140.468px" style="font-family:'Corbel', sans-serif;font-size:96.071px;fill:white;">NAERA<tspan x="444.672px " y="140.468px ">T</tspan>A</text>
+    </g>
+</svg>
