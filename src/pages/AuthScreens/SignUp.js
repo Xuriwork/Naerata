@@ -8,6 +8,7 @@ import notyf from '../../utils/notyf';
 const SignUp = ({ history }) => {
 	const [focus, setFocus] = useState(false);
 	const { register, handleSubmit, watch, errors } = useForm();
+
 	const password = watch('password') || '';
 	const passwordRequirements = {
 		hasLowercaseLetters: password.search(/[a-z]/) > -1,
@@ -21,12 +22,11 @@ const SignUp = ({ history }) => {
 	const handleInputFocus = () => setFocus(true);
 	const handleInputBlur = () => setFocus(false);
 
-	const handleSignUp = async (data) => {
+	const handleSignUp = handleSubmit(async (data) => {
 		const { username, email, password } = data;
 
-		const meetsAllRequirements = Object.keys(passwordRequirements).every(
-			(key) => passwordRequirements[key]
-		);
+		const meetsAllRequirements = Object.keys(passwordRequirements).every((key) => passwordRequirements[key]);
+
 		if (!meetsAllRequirements) return;
 
 		await Auth.signUp({
@@ -51,7 +51,7 @@ const SignUp = ({ history }) => {
 				console.error(error);
 				notyf.error(error);
 			});
-	};
+	});
 
 	return (
 		<div className='sign-up-component'>
@@ -67,7 +67,7 @@ const SignUp = ({ history }) => {
 							})}
 						/>
 					<span className='form-input-error'>
-						{errors.email && errors.email.message}
+						{errors.username && errors.username.message}
 					</span>
 					<label>Email</label>
 					<input
@@ -208,7 +208,7 @@ const SignUp = ({ history }) => {
 					<span className='form-input-error'>
 						{errors.confirm_password && errors.confirm_password.message}
 					</span>
-					<button onClick={handleSubmit(handleSignUp)} className='form-button'>
+					<button onClick={handleSignUp} className='form-button'>
 						Sign Up
 					</button>
 					<p>

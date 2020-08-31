@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import qs from 'query-string';
 import startCase from 'lodash/startCase';
-import { History, LocationState } from 'history';
+import { History, LocationState, Location } from 'history';
 import RotateIcon from '../../assets/icons/rotate-icon.svg';
 
 import {
@@ -25,6 +25,11 @@ type SettingMaps = {
 	[key in keyof AvatarProps]: any;
 };
 
+interface Props {
+	location: Location;
+	history: History<LocationState>;
+}
+
 const settingMaps: SettingMaps = {
 	faceMask: { true: 'true', false: 'false' },
 	faceMaskColor: theme.colors.clothing,
@@ -46,12 +51,7 @@ const settingMaps: SettingMaps = {
 	lashes: { true: 'true', false: 'false' },
 };
 
-interface EditorProps {
-	location: Location;
-	history: History<LocationState>;
-}
-
-const Editor = ({ location, history }: EditorProps) => {
+const Editor = ({ location, history }: Props) => {
 	const props = useMemo(
 		() => (location.search ? qs.parse(location.search) : getRandomOptions()),
 		[location.search]
@@ -72,22 +72,26 @@ const Editor = ({ location, history }: EditorProps) => {
 		[props, history]
 	);
 
-	const randomize = useCallback(() => {
-		history.push(`/settings/character-editor?${qs.stringify(getRandomOptions())}`);
+	const handleGenerateRandomCharacter = useCallback(() => {
+		history.push(
+			`/settings/character-editor?${qs.stringify(getRandomOptions())}`
+		);
 	}, [history]);
 
-	// const svgUrl = useMemo(
-	// 	() =>
-	// 		`/svg?${qs.stringify(
-	// 			Object.entries(props).reduce(
-	// 				(total, [key, value]) => ({ ...total, [key]: value }),
-	// 				{}
-	// 			)
-	// 		)}`,
-	// 	[props]
-	// );
+	const svgUrl = useMemo(
+		() =>
+			`/svg?${qs.stringify(
+				Object.entries(props).reduce(
+					(total, [key, value]) => ({ ...total, [key]: value }),
+					{}
+				)
+			)}`,
+		[props]
+	);
 
-	//const imgCode = `<img src="https://bigheads.io${svgUrl}" alt="Big Head" />`;
+	const handleSaveCharacter = () => {
+		console.log(`https://bigheads.io${svgUrl}`);
+	};
 
 	return (
 		<div className='character-editor-component'>
@@ -102,8 +106,11 @@ const Editor = ({ location, history }: EditorProps) => {
 			<div className='settings-container'>
 				<h2>
 					Settings{' '}
-					<button onClick={randomize} className='randomize-button'>
-                        <img src={RotateIcon} alt='random' />
+					<button
+						className='randomize-button'
+						onClick={handleGenerateRandomCharacter}
+					>
+						<img src={RotateIcon} alt='random' />
 						Random
 					</button>
 				</h2>
@@ -127,6 +134,9 @@ const Editor = ({ location, history }: EditorProps) => {
 						</div>
 					))}
 				</div>
+				<button className='save-character-button' onClick={handleSaveCharacter}>
+					Save character
+				</button>
 			</div>
 		</div>
 	);

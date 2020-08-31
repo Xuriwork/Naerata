@@ -13,12 +13,13 @@ import Home from './pages/Home';
 import VoiceChat from './pages/VoiceChat';
 import Chat from './pages/Chat';
 import Games from './pages/Games';
+import Settings from './pages/Settings';
 import ForgotPassword from './pages/AuthScreens/ForgotPassword';
 import ConfirmAccount from './pages/AuthScreens/ConfirmAccount';
 import SignIn from './pages/AuthScreens/SignIn';
 import SignUp from './pages/AuthScreens/SignUp';
 import NotFound from './pages/NotFound';
-import Editor from './utils/bigheads/Editor.tsx';
+import CharacterEditor from './pages/CharacterEditor/CharacterEditor';
 
 const App = () => {
 	return (
@@ -29,10 +30,11 @@ const App = () => {
 				<div className='pages-container'>
 					<Switch>
 						<ProtectedRoute exact path='/' component={Home} />
-						<ProtectedRoute path='/voice-chat' component={VoiceChat} />
-						<ProtectedRoute path='/chat' component={Chat} />
 						<ProtectedRoute path='/games' component={Games} />
-						<ProtectedRoute path='/settings/character-editor' component={Editor} />
+						<ProtectedRoute path='/chat' component={Chat} />
+						<ProtectedRoute path='/voice-chat' component={VoiceChat} />
+						<ProtectedRoute path='/settings/character-editor' component={CharacterEditor} />
+						<ProtectedRoute path='/settings' component={Settings} />
 						<PublicRoute path='/sign-up' component={SignUp} restricted={true} />
 						<PublicRoute path='/sign-in' component={SignIn} restricted={true} />
 						<PublicRoute path='/confirm-account' component={ConfirmAccount} restricted={true} />
