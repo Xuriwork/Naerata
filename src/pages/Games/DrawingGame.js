@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { Prompt } from 'react-router';
 
-const DrawingGame = () => {
+const DrawingGame = ({ history }) => {
 	const { user } = useAuth();
 	const [socket, setSocket] = useState({});
     const [message, setMessage] = useState('');
@@ -10,7 +11,18 @@ const DrawingGame = () => {
 	useEffect(() => {
         const _socket = new WebSocket('ws://127.0.0.1:8000', user.username);
         setSocket(_socket);
-    }, [user.username]);
+
+        const unlisten = history.listen(() => _socket.close());
+        return () => unlisten;
+    }, [user.username, history]);
+
+    useEffect(() => {
+        if (socket.readyState === 1) {
+          window.onbeforeunload = () => true;
+        } else {
+          window.onbeforeunload = undefined;
+        };
+    }, [socket.readyState]);
 
     socket.onopen = () => console.log('WebSocket connection established.');
     socket.onclose = () => console.log('WebSocket connection closed.');
@@ -42,10 +54,11 @@ const DrawingGame = () => {
 
 		socket.send(message);
 		setMessage('');
-	};
+    };
 
 	return (
 		<div className='drawing-game-page'>
+            <Prompt when={socket.readyState === 1} message='Are you sure you want to leave?' />
 			<div className='drawing-game-message-container'>
 				<div className='messages-container'>
 					{messages.map((message, index) => (

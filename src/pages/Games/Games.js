@@ -11,7 +11,7 @@ const Games = ({ history }) => {
 			<h1>All Games</h1>
 			<div className='games-container'>
 				<div className='game-card' onClick={handlePickGame}>
-					Let's Draw
+					Joonistame
 				</div>
 			</div>
 		</div>
