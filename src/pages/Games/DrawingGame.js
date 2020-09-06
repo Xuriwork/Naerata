@@ -8,9 +8,9 @@ const DrawingGame = () => {
     const [messages, setMessages] = useState([]);
 
 	useEffect(() => {
-        const _socket = new WebSocket('ws://127.0.0.1:8000', user.pool.clientId);
+        const _socket = new WebSocket('ws://127.0.0.1:8000', user.username);
         setSocket(_socket);
-    }, [user.pool.clientId]);
+    }, [user.username]);
 
     socket.onopen = () => console.log('WebSocket connection established.');
     socket.onclose = () => console.log('WebSocket connection closed.');
@@ -18,10 +18,9 @@ const DrawingGame = () => {
     socket.onmessage = (message) => {
         const _messages = [...messages];
         const _message = JSON.parse(message.data);
-        console.log(_message);
         _messages.push(_message);
         setMessages(_messages);
-    }
+    };
 
     // eslint-disable-next-line
     const reconnect = () => {
