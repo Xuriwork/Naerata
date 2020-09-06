@@ -12,6 +12,7 @@ class Room {
 
     addUser(user) {
         this.users.push(user);
+        this.handleOnUserMessage(user);
         user.socket.onclose = () => {
             console.log('A connection left.');
             this.removeUser(user);
@@ -32,6 +33,12 @@ class Room {
 
     sendToSpecificUsers(message, users) {
         users.forEach((user) => user.socket.send(message));
+    };
+
+    handleOnUserMessage(user) {
+        user.socket.on('message', (message) => {
+            this.sendAll(`${user.id} said: ${message}`);
+        });
     };
 }
 
