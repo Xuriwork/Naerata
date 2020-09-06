@@ -12,7 +12,8 @@ import 'notyf/notyf.min.css';
 import Home from './pages/Home';
 import VoiceChat from './pages/VoiceChat';
 import Chat from './pages/Chat';
-import Games from './pages/Games';
+import Games from './pages/Games/Games';
+import DrawingGame from './pages/Games/DrawingGame';
 import Settings from './pages/Settings';
 import ForgotPassword from './pages/AuthScreens/ForgotPassword';
 import ConfirmAccount from './pages/AuthScreens/ConfirmAccount';
@@ -30,6 +31,7 @@ const App = () => {
 				<div className='pages-container'>
 					<Switch>
 						<ProtectedRoute exact path='/' component={Home} />
+						<ProtectedRoute path='/games/drawing-game' component={DrawingGame} />
 						<ProtectedRoute path='/games' component={Games} />
 						<ProtectedRoute path='/chat' component={Chat} />
 						<ProtectedRoute path='/voice-chat' component={VoiceChat} />

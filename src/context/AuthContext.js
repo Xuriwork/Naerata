@@ -12,7 +12,6 @@ const AuthProvider = ({ children }) => {
 	useEffect(() => {
 		Auth.currentAuthenticatedUser()
 		.then((user) => {
-			console.log(user);
 			setUser(user);
 			setLoading(false);
 		})
