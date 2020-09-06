@@ -27,10 +27,12 @@ class Room {
     };
 
     sendAll(message) {
-        for (let i = 0, numberOfUsers = this.users.length; i < numberOfUsers; i++) {
-            this.users[i].socket.send(message);
-        }
-    }
+        this.users.forEach((user) => user.socket.send(message));
+    };
+
+    sendToSpecificUsers(message, users) {
+        users.forEach((user) => user.socket.send(message));
+    };
 }
 
 module.exports.User = User;

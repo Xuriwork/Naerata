@@ -14,7 +14,7 @@ server.on('connection', (socket, req) => {
     const user = new User(socket, id);
 
     drawingGameRoom.addUser(user);
-    const message = `Welcome ${user.id}. Total connection: ${drawingGameRoom.users.length}`;
+    const message = `${user.id} has joined the room. Total connection: ${drawingGameRoom.users.length}`;
     drawingGameRoom.sendAll(message);
 });
 
