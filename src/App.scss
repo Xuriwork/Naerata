@@ -99,10 +99,65 @@ a {
 }
 
 .drawing-game-page {
+	position: relative;
+}
+
+.drawing-game-message-container {
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	height: calc(100% - 60px);
+	padding: 15px;
+	max-width: 350px;
+	width: 100%;
+	box-sizing: border-box;
+	background-color: #eeeef4;
+}
+
+.messages-container {
+	flex-grow: 1;
+	border-radius: 5px;
+	padding: 5px;
+}
+
+.message {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	padding: 5px;
+	white-space: normal;
+	word-wrap: break-word;
+	color: #303a52;
+
+	&:not(:last-of-type) {
+		margin-bottom: 5px;
+	}
+
+	.message-author {
+		margin-right: 5px;
+	}
+}
+
+.SERVER {
+	display: block;
+	color: #17b978;
+	font-weight: 600;
+	background-color: #41e0a152;
+	border-radius: 5px;
+	box-sizing: border-box;
+}
+
+.message-input-container {
+	display: flex;
+	width: 100%;
+	margin-top: 10px;
+	
 	input {
 		background-color: #d3d3d3;
 		height: 35px;
-		width: 280px;
+		width: 100%;
 		border-radius: 5px;
 		text-indent: 15px;
 	}
@@ -161,8 +216,8 @@ a {
 	width: 250px;
 	height: calc(100% - 60px);
 	position: fixed;
-	z-index: 1;
 	left: 0;
+	z-index: 1;
 	background-color: #eeeef4;
 	padding-top: 30px;
 	box-sizing: border-box;

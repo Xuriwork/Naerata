@@ -28,16 +28,19 @@ class Room {
     };
 
     sendAll(message) {
-        this.users.forEach((user) => user.socket.send(message));
+        const _message = JSON.stringify({ author: 'SERVER', content: message });
+        this.users.forEach((user) => user.socket.send(_message));
     };
 
     sendToSpecificUsers(message, users) {
-        users.forEach((user) => user.socket.send(message));
+        const _message = JSON.stringify({ author: 'SERVER', content: message });
+        users.forEach((user) => user.socket.send(_message));
     };
 
     handleOnUserMessage(user) {
         user.socket.on('message', (message) => {
-            this.sendAll(`${user.id} said: ${message}`);
+            const _message = JSON.stringify({ author: user.id, content: message });
+            user.socket.send(_message);
         });
     };
 }
