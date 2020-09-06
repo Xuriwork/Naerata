@@ -137,14 +137,33 @@ a {
 	}
 }
 
-.SERVER {
+.SERVER_USER-JOINED {
 	display: block;
 	color: #17b978;
-	font-weight: 600;
 	background-color: #41e0a152;
+	font-weight: 600;
 	border-radius: 5px;
 	box-sizing: border-box;
 	font-size: 1em;
+
+	&:not(:last-of-type) {
+		margin-bottom: 5px;
+	}
+}
+
+.SERVER_USER-LEFT {
+	display: block;
+	color: #9c453b;
+	background-color: #f3b0a7;
+	font-weight: 600;
+	border-radius: 5px;
+	box-sizing: border-box;
+	font-size: 1em;
+	margin-bottom: 5px;
+
+	&:not(:first-of-type) {
+		margin-top: 5px;
+	}
 }
 
 .message-input-container {
@@ -204,7 +223,7 @@ a {
 		}
 
 		.sign-in-button {
-			color: var(--secondary-color);
+			color: #ffffff;
 			background-color: transparent;
 		}
 	}
@@ -236,6 +255,12 @@ a {
 			&.active {
 				border-left: 4px solid #0072ce;
 				background-color: #479ee679;
+			}
+
+			&.activeGame {
+				border-left: 4px solid #17b978;
+				background-color: #41e0a152;
+				color: #17b978;
 			}
 
 			&:hover {
@@ -323,6 +348,7 @@ a {
 .forgot-password-component {
 	@extend %flex-center-column;
 	width: 100%;
+	height: 100%;
 
 	> div {
 		@extend %flex-center-column;

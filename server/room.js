@@ -16,6 +16,8 @@ class Room {
         user.socket.onclose = () => {
             console.log('A connection left.');
             this.removeUser(user);
+            const message = `${user.id} has left the room. Total connections: ${this.users.length}`;
+            this.sendAll('SERVER_USER-LEFT', message);
         };
     };
     
@@ -27,8 +29,8 @@ class Room {
         }
     };
 
-    sendAll(message) {
-        const _message = JSON.stringify({ author: 'SERVER', content: message });
+    sendAll(author, message) {
+        const _message = JSON.stringify({ author, content: message });
         this.users.forEach((user) => user.socket.send(_message));
     };
 
@@ -38,10 +40,7 @@ class Room {
     };
 
     handleOnUserMessage(user) {
-        user.socket.on('message', (message) => {
-            const _message = JSON.stringify({ author: user.id, content: message });
-            user.socket.send(_message);
-        });
+        user.socket.on('message', (message) => this.sendAll(user.id, message));
     };
 }
 

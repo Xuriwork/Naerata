@@ -50,10 +50,19 @@ const DrawingGame = () => {
 				<div className='messages-container'>
 					{messages.map((message, index) => (
 						<div
-							className={message.author === 'SERVER' ? 'SERVER message' : 'message'}
+							className={
+								message.author === 'SERVER_USER-JOINED'
+									? 'SERVER_USER-JOINED message'
+									: message.author === 'SERVER_USER-LEFT'
+									? 'SERVER_USER-LEFT message'
+									: 'message'
+							}
 							key={index}
 						>
-							<h4 className='message-author'>{message.author}:</h4>
+							{message.author === 'SERVER_USER-JOINED' ||
+							message.author === 'SERVER_USER-LEFT' ? null : (
+								<h4 className='message-author'>{message.author}</h4>
+							)}
 							<div className='message-content'>{message.content}</div>
 						</div>
 					))}
@@ -63,7 +72,7 @@ const DrawingGame = () => {
 						type='text'
 						value={message}
 						onChange={handleOnChangeMessage}
-                        onKeyDown={handleOnKeyDown}
+						onKeyDown={handleOnKeyDown}
 						placeholder='Say something'
 					/>
 					<button onClick={handleSendMessage}>Send</button>
