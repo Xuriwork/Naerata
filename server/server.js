@@ -1,6 +1,8 @@
 const WebSocket = require('ws');
 const User = require('./room').User;
 const Room = require('./room').Room;
+const CHAT_MESSAGE = require('./constants').CHAT_MESSAGE;
+const LINE_SEGMENT = require('./constants').LINE_SEGMENT;
 
 const port = 8000;
 
@@ -15,7 +17,7 @@ server.on('connection', (socket, req) => {
 
     drawingGameRoom.addUser(user);
     const message = `${user.id} has joined the room. Total connections: ${drawingGameRoom.users.length}`;
-    drawingGameRoom.sendAll('SERVER_USER-JOINED', message);
+    drawingGameRoom.sendMessageToAll('SERVER_USER-JOINED', message, CHAT_MESSAGE);
 });
 
 server.on('close', () => {

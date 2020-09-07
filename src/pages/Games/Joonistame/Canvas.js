@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ColorPalette from './ColorPalette';
 
-const Canvas = () => {
+const Canvas = ({ canvasRef, socket }) => {
 	const canvasContainerRef = useRef();
-	const canvasRef = useRef();
 	const [brushColor, setBrushColor] = useState('#444444');
 	const [isDrawing, setIsDrawing] = useState(false);
 
@@ -17,10 +16,9 @@ const Canvas = () => {
 		const canvas = canvasRef.current;
 		canvas.width = canvasContainer.clientWidth;
 		canvas.height = canvasContainer.clientHeight;
-	}, []);
+	}, [canvasRef]);
 
 	useEffect(() => {
-
 		const resizeCanvas = () => {
 			const canvas = canvasRef.current;
 			const context = canvas.getContext('2d');
@@ -33,41 +31,39 @@ const Canvas = () => {
 
 			context.drawImage(inMemoryCanvas, 0, 0);
 		};
-	
+
 		window.addEventListener('resize', resizeCanvas);
 
 		return () => window.removeEventListener('resize', resizeCanvas);
-
-	}, [canvasContainer, inMemoryCanvas, inMemoryContext]);
+	}, [canvasContainer, inMemoryCanvas, inMemoryContext, canvasRef]);
 
 	const handleDraw = (e) => {
 		if (!isDrawing) return;
 		const canvas = canvasRef.current;
-		const context = canvasRef.current.getContext('2d');
-		context.lineWidth = 6;
-		context.lineCap = 'round';
-		context.strokeStyle = brushColor;
 
 		const canvasCalculations = canvas.getBoundingClientRect();
-
 		const offsetX = canvasCalculations.left;
 		const offsetY = canvasCalculations.top;
-
 		const mouseX = parseInt(e.clientX - offsetX);
 		const mouseY = parseInt(e.clientY - offsetY);
 
-		context.lineTo(mouseX, mouseY);
-		context.stroke();
-		context.beginPath();
-		context.moveTo(mouseX, mouseY);
+		const paintData = {};
+
+		paintData.dataType = 0;
+		paintData.brushColor = brushColor;
+		paintData.x = mouseX;
+		paintData.y = mouseY;
+
+		const data = JSON.stringify(paintData);
+		socket.send(data);
 	};
 
-	const startDrawing = (e) => {
+	const startLine = (e) => {
 		setIsDrawing(true);
 		handleDraw(e);
 	};
 
-	const finishDrawing = () => {
+	const finishLine = () => {
 		const context = canvasRef.current.getContext('2d');
 		setIsDrawing(false);
 		context.beginPath();
@@ -78,8 +74,8 @@ const Canvas = () => {
 			<ColorPalette setBrushColor={setBrushColor} />
 			<canvas
 				ref={canvasRef}
-				onMouseDown={startDrawing}
-				onMouseUp={finishDrawing}
+				onMouseDown={startLine}
+				onMouseUp={finishLine}
 				onMouseMove={handleDraw}
 				height={400}
 				width={400}

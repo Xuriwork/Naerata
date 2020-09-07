@@ -1,5 +1,5 @@
-const LINE_SEGMENT = 0;
-const CHAT_MESSAGE = 1;
+const CHAT_MESSAGE = require('./constants').CHAT_MESSAGE;
+const LINE_SEGMENT = require('./constants').LINE_SEGMENT;
 
 class User {
     constructor(socket, id) {
@@ -20,7 +20,7 @@ class Room {
             console.log('A connection left.');
             this.removeUser(user);
             const message = `${user.id} has left the room. Total connections: ${this.users.length}`;
-            this.sendAll('SERVER_USER-LEFT', message);
+            this.sendMessageToAll('SERVER_USER-LEFT', message);
         };
     };
     
@@ -32,19 +32,32 @@ class Room {
         }
     };
 
-    sendAll(author, message) {
-        const _message = JSON.stringify({ author, content: message });
+    sendMessageToAll(author, message) {
+        const _message = JSON.stringify({ author, content: message, dataType: CHAT_MESSAGE });
         this.users.forEach((user) => user.socket.send(_message));
     };
 
     sendToSpecificUsers(message, users) {
-        const _message = JSON.stringify({ author: 'SERVER', content: message });
+        const _message = JSON.stringify({ author: 'SERVER', content: message, dataType: CHAT_MESSAGE });
         users.forEach((user) => user.socket.send(_message));
     };
 
+    sendLine(x, y, brushColor) {
+        const lineData = JSON.stringify({ x, y, brushColor, dataType: LINE_SEGMENT });
+        this.users.forEach((user) => user.socket.send(lineData));
+    };
+
     handleOnUserMessage(user) {
-        user.socket.on('message', (message) => {
-            this.sendAll(user.id, message);
+        user.socket.on('message', (data) => {
+            const parsedData = JSON.parse(data);
+
+            if (parsedData.dataType === CHAT_MESSAGE) {
+                console.log(parsedData.message)
+                this.sendMessageToAll(user.id, parsedData.message);
+            } else if (parsedData.dataType === LINE_SEGMENT) {
+                console.log(parsedData);
+                this.sendLine(parsedData.x, parsedData.y, parsedData.brushColor);
+            }
         });
     };
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { Prompt } from 'react-router';
 import Canvas from './Canvas';
@@ -10,6 +10,7 @@ const Joonistame = ({ history }) => {
 	const [socket, setSocket] = useState({});
 	const [message, setMessage] = useState('');
 	const [messages, setMessages] = useState([]);
+	const canvasRef = useRef();
 
 	useEffect(() => {
 		const _socket = new WebSocket('ws://127.0.0.1:8000', user.username);
@@ -27,14 +28,31 @@ const Joonistame = ({ history }) => {
 	//     };
 	// }, [socket.readyState]);
 
+	const draw = (x, y, brushColor) => {
+		const context = canvasRef.current.getContext('2d');
+
+		context.lineWidth = 6;
+		context.lineCap = 'round';
+		context.strokeStyle = brushColor;
+
+		context.lineTo(x, y);
+		context.stroke();
+		context.beginPath();
+		context.moveTo(x, y);
+	};
+
 	socket.onopen = () => console.log('WebSocket connection established.');
 	socket.onclose = () => console.log('WebSocket connection closed.');
 	socket.onerror = (error) => console.error(error.message);
-	socket.onmessage = (message) => {
-		const _messages = [...messages];
-		const _message = JSON.parse(message.data);
-		_messages.push(_message);
-		setMessages(_messages);
+	socket.onmessage = ({ data: serverData }) => {
+		const data = JSON.parse(serverData);
+		if (data.dataType === 1) {
+			const _messages = [...messages];
+			_messages.push(data);
+			setMessages(_messages);
+		} else if (data.dataType === 0) {
+			draw(data.x , data.y, data.brushColor);
+		}
 	};
 
 	// eslint-disable-next-line
@@ -55,7 +73,9 @@ const Joonistame = ({ history }) => {
 		if (socket.readyState === 0) return;
 		if (message.trim() === '') return;
 
-		socket.send(message);
+		const _message = JSON.stringify({ message, dataType: 1 })
+
+		socket.send(_message);
 		setMessage('');
 	};
 
@@ -65,7 +85,7 @@ const Joonistame = ({ history }) => {
 				when={socket.readyState === 1}
 				message='Are you sure you want to leave?'
 			/>
-			<Canvas />
+			<Canvas socket={socket} canvasRef={canvasRef} />
 			<div className='drawing-game-message-container'>
 				<div className='messages-container'>
 					{messages.map((message, index) => (
