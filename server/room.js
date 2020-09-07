@@ -1,3 +1,6 @@
+const LINE_SEGMENT = 0;
+const CHAT_MESSAGE = 1;
+
 class User {
     constructor(socket, id) {
         this.socket = socket;
@@ -40,7 +43,9 @@ class Room {
     };
 
     handleOnUserMessage(user) {
-        user.socket.on('message', (message) => this.sendAll(user.id, message));
+        user.socket.on('message', (message) => {
+            this.sendAll(user.id, message);
+        });
     };
 }
 

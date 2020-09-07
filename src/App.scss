@@ -88,8 +88,8 @@ a {
 		width: 350px;
 		height: 200px;
 		background-image: linear-gradient(to right, rgb(241, 39, 17), rgb(245, 175, 25));
-		border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-		box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+		box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 		color: #ffffff;
 		border-radius: 10px;
 		cursor: pointer;
@@ -99,19 +99,53 @@ a {
 }
 
 .drawing-game-page {
-	position: relative;
+	.color-palette {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		background-color: #e0e0e0;
+		width: calc(100% - 300px);
+		height: 60px;
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+		z-index: 5;
+
+		.color {
+			height: 40px;
+			width: 40px;
+			border-radius: 50%;
+			cursor: pointer;
+		}
+	}
+
+	.canvas-container {
+		width: 100%;
+		height: 100%;
+		display: block;
+		box-sizing: border-box;
+		
+		position: relative;
+
+		canvas {
+			position: absolute;
+			cursor: url("./assets/icons/brush-fill.svg") 0 20, default;
+		}
+	}
 }
 
 .drawing-game-message-container {
-	display: flex;
-	flex-direction: column;
 	position: fixed;
 	right: 0;
 	bottom: 0;
-	height: calc(100% - 60px);
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	max-height: calc(100% - 60px);
 	padding: 10px;
-	max-width: 350px;
+	max-width: 300px;
 	width: 100%;
+	min-width: 250px;
 	box-sizing: border-box;
 	background-color: #eeeef4;
 }
@@ -559,3 +593,30 @@ a {
 		}
 	}
 }
+
+body {
+	font-family: 'Roboto Condensed', serif;
+  }
+  .main {
+	display: flex;
+	justify-content: center;
+  }
+  .color-guide {
+	margin: 20px 40px;
+  }
+  h5 {
+	margin-bottom: 10px;
+  }
+  .user {
+	padding: 7px 15px;
+	border-radius: 4px;
+	color: white;
+	font-size: 13px;
+	font-weight: bold;
+	background: #EE92C2;
+	margin: 10px 0;
+  }
+  .guest {
+	background: #F0C987;
+	color: white;
+  }

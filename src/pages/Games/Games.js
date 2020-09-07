@@ -3,7 +3,7 @@ import React from 'react';
 const Games = ({ history }) => {
 
     const handlePickGame = () => {
-        history.push('/games/drawing-game')
+        history.push('/games/joonistame')
     };
 
 	return (
