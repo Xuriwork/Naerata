@@ -80,13 +80,13 @@ const Joonistame = ({ history }) => {
 	};
 
 	return (
-		<div className='drawing-game-page'>
+		<div className='joonistame-page'>
 			<Prompt
 				when={socket.readyState === 1}
 				message='Are you sure you want to leave?'
 			/>
 			<Canvas socket={socket} canvasRef={canvasRef} />
-			<div className='drawing-game-message-container'>
+			<div className='joonistame-message-container'>
 				<div className='messages-container'>
 					{messages.map((message, index) => (
 						<div

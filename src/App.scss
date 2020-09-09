@@ -31,7 +31,6 @@ a {
 }
 
 .pages-container {
-	width: 100%;
 	height: 100%;
 	position: relative;
 	width: calc(100% - 250px);
@@ -66,7 +65,7 @@ a {
 .voice-chat-component,
 .chat-component,
 .settings-component,
-.drawing-game-page {
+.joonistame-page {
 	@extend %flex-center-column;
 	width: 100%;
 	height: 100%;
@@ -98,7 +97,7 @@ a {
 	}
 }
 
-.drawing-game-page {
+.joonistame-page {
 	.color-palette {
 		position: absolute;
 		bottom: 0;
@@ -134,7 +133,7 @@ a {
 	}
 }
 
-.drawing-game-message-container {
+.joonistame-message-container {
 	position: fixed;
 	right: 0;
 	bottom: 0;
