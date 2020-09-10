@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import { Prompt } from 'react-router';
 import Canvas from './Canvas';
+import DemoCanvas from './DemoCanvas';
 
 //const dataURL = canvas.toDataURL();
 
@@ -10,7 +11,6 @@ const Joonistame = ({ history }) => {
 	const [socket, setSocket] = useState({});
 	const [message, setMessage] = useState('');
 	const [messages, setMessages] = useState([]);
-	const canvasRef = useRef();
 
 	useEffect(() => {
 		const _socket = new WebSocket('ws://127.0.0.1:8000', user.username);
@@ -28,30 +28,17 @@ const Joonistame = ({ history }) => {
 	//     };
 	// }, [socket.readyState]);
 
-	const draw = (x, y, brushColor) => {
-		const context = canvasRef.current.getContext('2d');
-
-		context.lineWidth = 6;
-		context.lineCap = 'round';
-		context.strokeStyle = brushColor;
-
-		context.lineTo(x, y);
-		context.stroke();
-		context.beginPath();
-		context.moveTo(x, y);
-	};
-
 	socket.onopen = () => console.log('WebSocket connection established.');
 	socket.onclose = () => console.log('WebSocket connection closed.');
 	socket.onerror = (error) => console.error(error.message);
 	socket.onmessage = ({ data: serverData }) => {
 		const data = JSON.parse(serverData);
+		console.log(data);
+		
 		if (data.dataType === 1) {
 			const _messages = [...messages];
 			_messages.push(data);
 			setMessages(_messages);
-		} else if (data.dataType === 0) {
-			draw(data.x , data.y, data.brushColor);
 		}
 	};
 
@@ -85,7 +72,7 @@ const Joonistame = ({ history }) => {
 				when={socket.readyState === 1}
 				message='Are you sure you want to leave?'
 			/>
-			<Canvas socket={socket} canvasRef={canvasRef} />
+			<DemoCanvas socket={socket} user={user.username} />
 			<div className='joonistame-message-container'>
 				<div className='messages-container'>
 					{messages.map((message, index) => (

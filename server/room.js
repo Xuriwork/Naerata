@@ -42,8 +42,9 @@ class Room {
         users.forEach((user) => user.socket.send(_message));
     };
 
-    sendLine(x, y, brushColor) {
-        const lineData = JSON.stringify({ x, y, brushColor, dataType: LINE_SEGMENT });
+    sendLine(prevPos, currPos, strokeStyle) {
+        console.log(prevPos, currPos, strokeStyle)
+        const lineData = JSON.stringify({ x, y, strokeStyle, dataType: LINE_SEGMENT });
         this.users.forEach((user) => user.socket.send(lineData));
     };
 
@@ -55,8 +56,9 @@ class Room {
                 console.log(parsedData.message)
                 this.sendMessageToAll(user.id, parsedData.message);
             } else if (parsedData.dataType === LINE_SEGMENT) {
-                console.log(parsedData);
-                this.sendLine(parsedData.x, parsedData.y, parsedData.brushColor);
+                parsedData.line.forEach((line) => {
+                    this.sendLine(line.start, line.stop, parsedData.strokeStyle);
+                })
             }
         });
     };

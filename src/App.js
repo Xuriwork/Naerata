@@ -22,6 +22,8 @@ import SignUp from './pages/AuthScreens/SignUp';
 import NotFound from './pages/NotFound';
 import CharacterEditor from './pages/CharacterEditor/CharacterEditor';
 
+import Canvas from './pages/Games/Joonistame/DemoCanvas';
+
 const App = () => {
 	return (
 		<Router>
@@ -32,6 +34,7 @@ const App = () => {
 					<Switch>
 						<ProtectedRoute exact path='/' component={Home} />
 						<ProtectedRoute path='/games/joonistame' component={Joonistame} />
+						<ProtectedRoute path='/games/demo' component={Canvas} />
 						<ProtectedRoute path='/games' component={Games} />
 						<ProtectedRoute path='/chat' component={Chat} />
 						<ProtectedRoute path='/voice-chat' component={VoiceChat} />

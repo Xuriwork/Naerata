@@ -1,121 +1,117 @@
-import React, { Component } from 'react';
-import { v4 } from 'uuid';
+import React, { useEffect, useState, useRef } from 'react';
+import ColorPalette from './ColorPalette';
 
-class App extends Component {
-  render() {
-    return (
-      <Fragment>
-        <h3 style={{ textAlign: 'center' }}>Dos Paint</h3>
-        <div className="main">
-          <div className="color-guide">
-            <h5>Color Guide</h5>
-            <div className="user user">User</div>
-            <div className="user guest">Guest</div>
-          </div>
-          <Canvas />
-        </div>
-      </Fragment>
-    );
-  }
-}
+const Canvas = ({ user, socket }) => {
+	const canvasRef = useRef(null);
+	const canvasContainerRef = useRef();
 
-class Canvas extends Component {
-	constructor(props) {
-		super(props);
-		this.onMouseDown = this.onMouseDown.bind(this);
-		this.onMouseMove = this.onMouseMove.bind(this);
-		this.endPaintEvent = this.endPaintEvent.bind(this);
-	}
+	const [prevPos, setPrevPos] = useState({ offsetX: 0, offsetY: 0 });
+	const [context, setContext] = useState(null);
+	const [isPainting, setIsPainting] = useState(false);
+	const [line, setLine] = useState([]);
+	const [brushColor, setBrushColor] = useState('#444444');
 
-	isPainting = false;
-	// Different stroke styles to be used for user and guest
-	userStrokeStyle = '#EE92C2';
-	guestStrokeStyle = '#F0C987';
-	line = [];
-	// v4 creates a unique id for each user. We used this since there's no auth to tell users apart
-	userId = v4();
-	prevPos = { offsetX: 0, offsetY: 0 };
+	socket.onmessage = ({ data: serverData }) => {
+		const data = JSON.parse(serverData);
+		if (data.dataType === 0) {
+			const { prevPos, currPos, strokeStyle } = data;
+			paint(prevPos, currPos, strokeStyle);
+		}
+	};
 
-	onMouseDown({ nativeEvent }) {
+	const onMouseDown = ({ nativeEvent }) => {
 		const { offsetX, offsetY } = nativeEvent;
-		this.isPainting = true;
-		this.prevPos = { offsetX, offsetY };
-	}
+		setIsPainting(true);
+		setPrevPos({ offsetX, offsetY });
+	};
 
-	onMouseMove({ nativeEvent }) {
-		if (this.isPainting) {
+	const onMouseMove = ({ nativeEvent }) => {
+		if (isPainting) {
 			const { offsetX, offsetY } = nativeEvent;
 			const offSetData = { offsetX, offsetY };
-			// Set the start and stop position of the paint event.
+
 			const positionData = {
-				start: { ...this.prevPos },
+				start: { ...prevPos },
 				stop: { ...offSetData },
 			};
-			// Add the position to the line array
-			this.line = this.line.concat(positionData);
-			this.paint(this.prevPos, offSetData, this.userStrokeStyle);
+
+			setLine(line.concat(positionData));
+			paint(prevPos, offSetData, brushColor);
 		}
-	}
-	endPaintEvent() {
-		if (this.isPainting) {
-			this.isPainting = false;
-			this.sendPaintData();
+	};
+
+	const endPaintEvent = () => {
+		if (isPainting) {
+			setIsPainting(false);
+			sendPaintData();
 		}
-	}
-	paint(prevPos, currPos, strokeStyle) {
+	};
+
+	const paint = (prevPos, currPos, strokeStyle) => {
+		const context = canvasRef.current.getContext('2d');
+
 		const { offsetX, offsetY } = currPos;
 		const { offsetX: x, offsetY: y } = prevPos;
 
-		this.ctx.beginPath();
-		this.ctx.strokeStyle = strokeStyle;
-		// Move the the prevPosition of the mouse
-		this.ctx.moveTo(x, y);
-		// Draw a line to the current position of the mouse
-		this.ctx.lineTo(offsetX, offsetY);
-		// Visualize the line using the strokeStyle
-		this.ctx.stroke();
-		this.prevPos = { offsetX, offsetY };
-	}
+		context.beginPath();
+		context.strokeStyle = strokeStyle;
+		context.moveTo(x, y);
+		context.lineTo(offsetX, offsetY);
+		context.stroke();
+		setPrevPos({ offsetX, offsetY });
+	};
 
-	async sendPaintData() {
-		const body = {
-			line: this.line,
-			userId: this.userId,
+	// const paint = (prevPos, currPos, strokeStyle) => {
+	// 	const { offsetX, offsetY } = currPos;
+	// 	const { offsetX: x, offsetY: y } = prevPos;
+
+	// 	context.beginPath();
+	// 	context.strokeStyle = strokeStyle;
+	// 	context.moveTo(x, y);
+	// 	context.lineTo(offsetX, offsetY);
+	// 	context.stroke();
+	// 	setPrevPos({ offsetX, offsetY });
+	// };
+
+	const sendPaintData = async () => {
+		const paintData = {
+			line,
+			user,
+			dataType: 0,
+			strokeStyle: brushColor
 		};
-		// We use the native fetch API to make requests to the server
-		const req = await fetch('http://localhost:4000/paint', {
-			method: 'post',
-			body: JSON.stringify(body),
-			headers: {
-				'content-type': 'application/json',
-			},
-		});
-		const res = await req.json();
-		this.line = [];
-	}
+		const data = JSON.stringify(paintData);
+		console.log(paintData);
+		socket.send(data);
+		setLine([]);
+	};
 
-	componentDidMount() {
-		// Here we set up the properties of the canvas element.
-		this.canvas.width = 1000;
-		this.canvas.height = 800;
-		this.ctx = this.canvas.getContext('2d');
-		this.ctx.lineJoin = 'round';
-		this.ctx.lineCap = 'round';
-		this.ctx.lineWidth = 5;
-	}
+	useEffect(() => {
+		const canvas = canvasRef.current;
+		const canvasContainer = canvasContainerRef.current;
+		
+		canvas.width = canvasContainer.clientWidth;
+		canvas.height = canvasContainer.clientHeight;
 
-	render() {
-		return (
+		const _context = canvas.getContext('2d');
+		_context.lineJoin = 'round';
+		_context.lineCap = 'round';
+		_context.lineWidth = 5;
+		setContext(_context);
+	}, [context]);
+
+	return (
+		<div ref={canvasContainerRef} className='canvas-container'>
+			<ColorPalette setBrushColor={setBrushColor} />
 			<canvas
-				// We use the ref attribute to get direct access to the canvas element.
-				ref={(ref) => (this.canvas = ref)}
-				style={{ background: 'black' }}
-				onMouseDown={this.onMouseDown}
-				onMouseLeave={this.endPaintEvent}
-				onMouseUp={this.endPaintEvent}
-				onMouseMove={this.onMouseMove}
+				ref={canvasRef}
+				style={{ background: '#afafaf' }}
+				onMouseDown={onMouseDown}
+				onMouseLeave={endPaintEvent}
+				onMouseUp={endPaintEvent}
+				onMouseMove={onMouseMove}
 			/>
-		);
-	}
-}
-export default App;
+		</div>
+	);
+};
+export default Canvas;
