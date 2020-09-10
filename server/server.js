@@ -2,7 +2,6 @@ const WebSocket = require('ws');
 const User = require('./room').User;
 const Room = require('./room').Room;
 const CHAT_MESSAGE = require('./constants').CHAT_MESSAGE;
-const LINE_SEGMENT = require('./constants').LINE_SEGMENT;
 
 const port = 8000;
 
