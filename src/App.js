@@ -38,12 +38,23 @@ const App = () => {
 						<ProtectedRoute path='/games' component={Games} />
 						<ProtectedRoute path='/chat' component={Chat} />
 						<ProtectedRoute path='/voice-chat' component={VoiceChat} />
-						<ProtectedRoute path='/settings/character-editor' component={CharacterEditor} />
+						<ProtectedRoute
+							path='/settings/character-editor'
+							component={CharacterEditor}
+						/>
 						<ProtectedRoute path='/settings' component={Settings} />
 						<PublicRoute path='/sign-up' component={SignUp} restricted={true} />
 						<PublicRoute path='/sign-in' component={SignIn} restricted={true} />
-						<PublicRoute path='/confirm-account' component={ConfirmAccount} restricted={true} />
-						<PublicRoute path='/forgot-password' component={ForgotPassword} restricted={true} />
+						<PublicRoute
+							path='/confirm-account'
+							component={ConfirmAccount}
+							restricted={true}
+						/>
+						<PublicRoute
+							path='/forgot-password'
+							component={ForgotPassword}
+							restricted={true}
+						/>
 						<Route component={NotFound} />
 					</Switch>
 				</div>

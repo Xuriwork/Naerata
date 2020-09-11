@@ -16,6 +16,7 @@ const Canvas = ({ user, socket }) => {
 		if (data.dataType === 0) {
 			const { prevPos, currPos, strokeStyle } = data;
 			paint(prevPos, currPos, strokeStyle);
+			setPrevPos({ offsetX: 0, offsetY: 0 });
 		}
 	};
 
@@ -43,7 +44,8 @@ const Canvas = ({ user, socket }) => {
 	const endPaintEvent = () => {
 		if (isPainting) {
 			setIsPainting(false);
-			sendPaintData();
+			setPrevPos({ offsetX: 0, offsetY: 0 });
+			//sendPaintData();
 		}
 	};
 
@@ -59,6 +61,7 @@ const Canvas = ({ user, socket }) => {
 		context.lineTo(offsetX, offsetY);
 		context.stroke();
 		setPrevPos({ offsetX, offsetY });
+		sendPaintData(prevPos, currPos, strokeStyle);
 	};
 
 	// const paint = (prevPos, currPos, strokeStyle) => {
@@ -73,16 +76,17 @@ const Canvas = ({ user, socket }) => {
 	// 	setPrevPos({ offsetX, offsetY });
 	// };
 
-	const sendPaintData = async () => {
+	const sendPaintData = async (prevPos, currPos, strokeStyle) => {
 		const paintData = {
-			line,
 			user,
+			prevPos, 
+			currPos,
 			dataType: 0,
-			strokeStyle: brushColor
+			strokeStyle
 		};
 		const data = JSON.stringify(paintData);
+		console.log(paintData);
 		socket.send(data);
-		setLine([]);
 	};
 
 	useEffect(() => {

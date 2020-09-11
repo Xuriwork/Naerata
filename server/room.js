@@ -43,8 +43,7 @@ class Room {
     };
 
     sendLine(prevPos, currPos, strokeStyle) {
-        console.log(prevPos, currPos, strokeStyle)
-        const lineData = JSON.stringify({ x, y, strokeStyle, dataType: LINE_SEGMENT });
+        const lineData = JSON.stringify({ prevPos, currPos, strokeStyle, dataType: LINE_SEGMENT });
         this.users.forEach((user) => user.socket.send(lineData));
     };
 
