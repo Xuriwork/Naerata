@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
-import { Auth } from 'aws-amplify';
+import { useHistory } from 'react-router';
 import notyf from '../../utils/notyf';
+import { auth } from '../../services/firebase';
 
-const ForgotPassword = ({ history }) => {
+const ForgotPassword = () => {
+	const history = useHistory();
+
 	const [email, setEmail] = useState('');
 	const [emailSent, setEmailSent] = useState(false);
 	const [verificationCode, setVerificationCode] = useState('');
 	const [newPassword, setNewPassword] = useState('');
 
-	const handleOnEmailChange = (e) => setEmail(e.target.value);
-	const handleOnVerificationCodeChange = (e) => setVerificationCode(e.target.value);
-	const handleOnNewPasswordChange = (e) => setNewPassword(e.target.value);
+	const handleOnEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
+	const handleOnVerificationCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => setVerificationCode(e.target.value);
+	const handleOnNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value);
 
 	const handleSendResetPasswordVerificationCode = async () => {
 		try {
-			await Auth.forgotPassword(email);
+			await auth.sendPasswordResetEmail(email);
 			notyf.open({ type: 'info', message: 'Verification code sent' });
 			setEmailSent(true);
 		} catch (error) {
@@ -22,10 +25,10 @@ const ForgotPassword = ({ history }) => {
 		}
 	};
 
-	const handleChangePassword = async (e) => {
+	const handleChangePassword = async (e: MouseEvent) => {
 		e.preventDefault();
 		try {
-			await Auth.forgotPasswordSubmit(email, verificationCode, newPassword);
+			await auth.confirmPasswordReset(verificationCode, newPassword);
 			setTimeout(() => history.push('/'), 2500);
 			notyf.success('Password reset successful, redirecting...');
 		} catch (error) {

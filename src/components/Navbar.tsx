@@ -1,18 +1,16 @@
 import React from 'react';
-import { Auth } from 'aws-amplify';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, useHistory } from 'react-router-dom';
+import firebase from 'firebase';
 import { useAuth } from '../context/AuthContext';
 import Logo from '../assets/images/icons/naerata_logo_beta_1_white.svg';
 
-const Navbar = ({ history }) => {
+const Navbar = () => {
 	const { isAuthed, setUser } = useAuth();
+	const history = useHistory();
 
 	const handleSignOut = async () => {
-		await Auth.signOut()
-			.then(() => {
-				setUser(null);
-				history.push('/sign-in');
-			})
+		await firebase.auth().signOut()
+			.then(() => history.push('/sign-in'))
 			.catch((error) => console.error('Error signing out: ', error));
 	};
 

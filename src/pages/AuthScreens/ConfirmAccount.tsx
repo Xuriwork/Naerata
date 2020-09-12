@@ -1,34 +1,27 @@
 import React, { useState } from 'react';
-import { Auth } from 'aws-amplify';
 import notyf from '../../utils/notyf';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory, useLocation } from 'react-router-dom';
+import { auth } from '../../services/firebase';
 
-const ConfirmAccount = ({ location, history }) => {
+const ConfirmAccount = () => {
+	const history = useHistory();
+	const location = useLocation();
+
 	const [confirmationCode, setConfirmationCode] = useState('');
 	if (!(location.state && location.state.username)) return <Redirect to={{ pathname: '/sign-in' }} />;
 	const username = location.state.username;
 
-	const handleOnCodeChange = (e) => setConfirmationCode(e.target.value);
-
-	const handleConfirmSignUp = async (e) => {
-		e.preventDefault();
-
-		await Auth.confirmSignUp(username, confirmationCode)
-		.then(() => {
-			notyf.success('User confirmed, redirecting to sign in');
-			history.push('/');
-		})
-		.catch((error) => console.log('Error confirming sign up', error));
-	};
+	const handleOnCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => setConfirmationCode(e.target.value);
 
 	const handleResendConfirmationCode = async () => {
 		try {
-			await Auth.resendSignUp(username);
+			await auth.currentUser.sendEmailVerification()
 			notyf.open({ type: 'info', message: 'Confirmation code sent' });
 		} catch (error) {
 			console.log(error);
 		}
 	};
+
 	return (
 		<div className='confirm-account-component'>
 			<div>
@@ -42,9 +35,6 @@ const ConfirmAccount = ({ location, history }) => {
 						onChange={handleOnCodeChange}
 						style={{ marginTop: '2px', marginBottom: 0 }}
 					/>
-					<button onClick={handleConfirmSignUp} className='form-button'>
-						Confirm
-					</button>
 					<p
 						onClick={handleResendConfirmationCode}
 						className='resend-confirmation-code-button'

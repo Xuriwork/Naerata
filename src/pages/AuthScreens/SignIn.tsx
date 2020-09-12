@@ -1,31 +1,27 @@
 import React from 'react';
-import { Auth } from 'aws-amplify';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import notyf from '../../utils/notyf';
 import { useAuth } from '../../context/AuthContext';
+import { auth } from '../../services/firebase';
 
-const SignIn = ({ history }) => {
+const SignIn = () => {
+	const history = useHistory();
 	const { register, handleSubmit, errors } = useForm();
 	const { setUser } = useAuth();
 
 	const handleSignIn = handleSubmit(async (data) => {
         const { username, password } = data;
-		Auth.signIn(username, password)
-		.then((user) => {
-			setUser(user);
-			history.push('/');
+		auth.signInWithEmailAndPassword(username, password)
+		.then((user: any) => {
+			if (user.emailVerified) {
+				setUser(user);
+				history.push('/');
+			} else {
+				history.push('/confirm-account');
+			}
 		})
-		.catch((error) => {
-			if (error.code === "UserNotConfirmedException") {
-				Auth.resendSignUp(username);
-				setTimeout(() => history.push({ pathname: '/confirm-account', state: { username } }), 2500);
-				notyf.open({ 
-					type: 'info', 
-					message: 'User not confirmed, redirecting...' 
-				});
-				return;
-			};
+		.catch((error: any) => {
 			notyf.error(error);
 			console.error(error);
 		});

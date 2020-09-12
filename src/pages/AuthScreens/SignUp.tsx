@@ -1,11 +1,11 @@
 /* eslint-disable no-useless-escape */
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import notyf from '../../utils/notyf';
 
-const SignUp = ({ history }) => {
+const SignUp = () => {
+	const history = useHistory();
 	const [focus, setFocus] = useState(false);
 	const { register, handleSubmit, watch, errors } = useForm();
 
@@ -46,8 +46,7 @@ const SignUp = ({ history }) => {
 					message: 'User not confirmed, redirecting...',
 				});
 			})
-			.catch((error) => {
-				if (error.code === "UserNotConfirmedException") return;
+			.catch((error: any) => {
 				console.error(error);
 				notyf.error(error);
 			});
