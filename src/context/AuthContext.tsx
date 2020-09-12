@@ -2,8 +2,14 @@ import Loading from '../components/Loading';
 import React, { useEffect, useState } from 'react';
 import { auth } from '../services/firebase';
 
+// user: firebase.User | {
+// 	username: string | null;
+// 	displayName: string | null;
+// 	photoURL: string | null;
+// };
+
 type AuthContextType = {
-	user: firebase.User | null;
+	user: any;
 	isAuthed: boolean;
 	setUser: any;
 	loading: boolean;

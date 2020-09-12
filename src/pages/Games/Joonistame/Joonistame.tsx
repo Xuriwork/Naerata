@@ -1,24 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../../context/AuthContext';
-import { Prompt } from 'react-router';
+import { Prompt, useHistory } from 'react-router';
 import Canvas from './Canvas';
 import DemoCanvas from './DemoCanvas';
 
 //const dataURL = canvas.toDataURL();
 
-const Joonistame = ({ history }) => {
+type MessagesType = {
+	author: string;
+	content: string;
+}
+
+const Joonistame = () => {
+	const history = useHistory();
 	const { user } = useAuth();
-	const [socket, setSocket] = useState({});
+	const [socket, setSocket] = useState<any>({});
 	const [message, setMessage] = useState('');
-	const [messages, setMessages] = useState([]);
+	const [messages, setMessages] = useState<MessagesType[]>([]);
 
 	useEffect(() => {
-		const _socket = new WebSocket('ws://127.0.0.1:8000', user.username);
+		const _socket = new WebSocket('ws://127.0.0.1:8000', user?.username);
+		_socket.onopen = () => console.log('WebSocket connection established.');
+		_socket.onclose = () => console.log('WebSocket connection closed.');
+		_socket.onerror = (error: any) => console.error(error.message);
+		_socket.onmessage = ({ data: serverData }) => {
+			const data = JSON.parse(serverData);
+			console.log(data);
+			
+			if (data.dataType === 1) {
+				const _messages = [...messages];
+				_messages.push(data);
+				setMessages(_messages);
+			}
+		};
 		setSocket(_socket);
 
 		const unlisten = history.listen(() => _socket.close());
-		return () => unlisten;
-	}, [user.username, history]);
+		return () => unlisten();
+	}, [user, history, messages]);
 
 	// useEffect(() => {
 	//     if (socket.readyState === 1) {
@@ -28,20 +47,6 @@ const Joonistame = ({ history }) => {
 	//     };
 	// }, [socket.readyState]);
 
-	socket.onopen = () => console.log('WebSocket connection established.');
-	socket.onclose = () => console.log('WebSocket connection closed.');
-	socket.onerror = (error) => console.error(error.message);
-	socket.onmessage = ({ data: serverData }) => {
-		const data = JSON.parse(serverData);
-		console.log(data);
-		
-		if (data.dataType === 1) {
-			const _messages = [...messages];
-			_messages.push(data);
-			setMessages(_messages);
-		}
-	};
-
 	// eslint-disable-next-line
 	const reconnect = () => {
 		if (socket) socket.close();
@@ -49,12 +54,12 @@ const Joonistame = ({ history }) => {
 		setSocket(_socket);
 	};
 
-	const handleOnChangeMessage = (e) => setMessage(e.target.value);
-	const handleOnKeyDown = (e) => {
-		if (e.keyCode === 13) return handleSendMessage(e);
+	const handleOnChangeMessage = (e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value);
+	const handleOnKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.keyCode === 13) return (e: React.MouseEvent) => handleSendMessage(e);
 	};
 
-	const handleSendMessage = (e) => {
+	const handleSendMessage = (e: React.MouseEvent) => {
 		e.preventDefault();
 
 		if (socket.readyState === 0) return;

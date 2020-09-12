@@ -32,9 +32,7 @@ a {
 
 .pages-container {
 	height: 100%;
-	position: relative;
-	width: calc(100% - 250px);
-	left: 250px;
+	margin-left: auto;
 }
 
 .loading-component {

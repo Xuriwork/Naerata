@@ -26,6 +26,8 @@ const ForgotPassword = () => {
 	};
 
 	const handleChangePassword = async (e: MouseEvent) => {
+		console.log(e);
+		
 		e.preventDefault();
 		try {
 			await auth.confirmPasswordReset(verificationCode, newPassword);
@@ -57,7 +59,7 @@ const ForgotPassword = () => {
 								onChange={handleOnNewPasswordChange}
 								style={{ marginTop: '2px', marginBottom: 0 }}
 							/>
-							<button onClick={handleChangePassword} className='form-button'>
+							<button onClick={() => handleChangePassword} className='form-button'>
 								Change Password
 							</button>
 						</>

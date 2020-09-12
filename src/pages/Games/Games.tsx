@@ -1,6 +1,8 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 
-const Games = ({ history }) => {
+const Games = () => {
+	const history = useHistory();
 
     const handlePickGame = () => {
         history.push('/games/joonistame')

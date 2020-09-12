@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import notyf from '../../utils/notyf';
+import { auth } from '../../services/firebase';
 
 const SignUp = () => {
 	const history = useHistory();
@@ -10,7 +11,7 @@ const SignUp = () => {
 	const { register, handleSubmit, watch, errors } = useForm();
 
 	const password = watch('password') || '';
-	const passwordRequirements = {
+	const passwordRequirements: { [requirement: string]: boolean } = {
 		hasLowercaseLetters: password.search(/[a-z]/) > -1,
 		hasUppercaseLetters: password.search(/[A-Z]/) > -1,
 		hasNumbers: password.search(/\d/) > -1,
@@ -29,12 +30,7 @@ const SignUp = () => {
 
 		if (!meetsAllRequirements) return;
 
-		await Auth.signUp({
-			username,
-			email,
-			password,
-			attributes: { email },
-		})
+		await auth.createUserWithEmailAndPassword(email, password)
 			.then(() => {
 				setTimeout(
 					() =>

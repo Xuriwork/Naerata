@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import Logo from '../assets/images/icons/naerata_logo_beta_1_white.svg';
 
 const Navbar = () => {
-	const { isAuthed, setUser } = useAuth();
+	const { isAuthed } = useAuth();
 	const history = useHistory();
 
 	const handleSignOut = async () => {

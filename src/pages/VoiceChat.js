@@ -61,7 +61,7 @@ const reducer = (state = defaultState, action) => {
 const VoiceChat = () => {
 	const [isJoined, setisJoined] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
-	const [agoraClient, setClient] = useState(undefined);
+	const [agoraClient, setClient] = useState(null);
 
 	const [state, dispatch] = useReducer(reducer, defaultState);
 
@@ -149,7 +149,7 @@ const VoiceChat = () => {
 					/>
 				</div>
 				<h4>Microphone</h4>
-				<select onChange={update('setMicrophone')}>
+				<select onChange={() => update('setMicrophone')}>
 					{microphoneList.map((item) => (
 						<option key={item.deviceId} value={item.deviceId}>
 							{item.label}

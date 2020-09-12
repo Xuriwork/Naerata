@@ -3,12 +3,13 @@ import React from 'react';
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import { ProtectedRoute, PublicRoute } from './components/Routes';
-import Navbar from './components/Navbar';
-import Sidebar from './components/Sidebar';
+import { useAuth } from './context/AuthContext';
 
 import './App.scss';
 import 'notyf/notyf.min.css';
 
+import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
 import VoiceChat from './pages/VoiceChat';
 import Chat from './pages/Chat';
@@ -25,12 +26,15 @@ import CharacterEditor from './pages/CharacterEditor/CharacterEditor';
 import Canvas from './pages/Games/Joonistame/DemoCanvas';
 
 const App = () => {
+	const { user, isAuthed } = useAuth();
+	console.log(user);
+
 	return (
 		<Router>
 			<Navbar />
 			<div className='app-component'>
-				<Sidebar />
-				<div className='pages-container'>
+				{ isAuthed && <Sidebar /> }
+				<div className='pages-container' style={{ width: isAuthed ? 'calc(100% - 250px)' : '100%' }}>
 					<Switch>
 						<ProtectedRoute exact path='/' component={Home} />
 						<ProtectedRoute path='/games/joonistame' component={Joonistame} />

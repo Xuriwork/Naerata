@@ -1,64 +1,53 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ColorPalette from './ColorPalette';
 
-const Canvas = ({ canvasRef, socket }) => {
-	const canvasContainerRef = useRef();
+type CanvasProps = {
+	canvasRef: any;
+	socket: any;
+};
+
+type PaintDataType = { 
+	dataType: number; 
+	brushColor: string; 
+	x: number; 
+	y: number;
+};
+
+const Canvas = ({ canvasRef, socket }: CanvasProps) => {
+	const canvasContainerRef = useRef<HTMLDivElement>(null);
 	const [brushColor, setBrushColor] = useState('#444444');
 	const [isDrawing, setIsDrawing] = useState(false);
-
-	const inMemoryCanvas = document.createElement('canvas');
-	const inMemoryContext = inMemoryCanvas.getContext('2d');
-
-	const canvasContainer = canvasContainerRef.current;
 
 	useEffect(() => {
 		const canvasContainer = canvasContainerRef.current;
 		const canvas = canvasRef.current;
-		canvas.width = canvasContainer.clientWidth;
-		canvas.height = canvasContainer.clientHeight;
+		canvas.width = canvasContainer?.clientWidth;
+		canvas.height = canvasContainer?.clientHeight;
 	}, [canvasRef]);
 
-	useEffect(() => {
-		const resizeCanvas = () => {
-			const canvas = canvasRef.current;
-			const context = canvas.getContext('2d');
-			inMemoryCanvas.width = canvas.width;
-			inMemoryCanvas.height = canvas.height;
-			inMemoryContext.drawImage(canvas, 0, 0);
-
-			canvas.width = canvasContainer.clientWidth;
-			canvas.height = canvasContainer.clientHeight;
-
-			context.drawImage(inMemoryCanvas, 0, 0);
-		};
-
-		window.addEventListener('resize', resizeCanvas);
-
-		return () => window.removeEventListener('resize', resizeCanvas);
-	}, [canvasContainer, inMemoryCanvas, inMemoryContext, canvasRef]);
-
-	const handleDraw = (e) => {
+	const handleDraw = (e: MouseEvent) => {
 		if (!isDrawing) return;
 		const canvas = canvasRef.current;
 
 		const canvasCalculations = canvas.getBoundingClientRect();
 		const offsetX = canvasCalculations.left;
 		const offsetY = canvasCalculations.top;
-		const mouseX = parseInt(e.clientX - offsetX);
-		const mouseY = parseInt(e.clientY - offsetY);
+		const mouseX = parseInt(String(e.clientX - offsetX));
+		const mouseY = parseInt(String(e.clientY - offsetY));
 
-		const paintData = {};
+		const paintData: PaintDataType = {
+			dataType: 0,
+			brushColor,
+			x: mouseX,
+			y: mouseY,
+		};
 
-		paintData.dataType = 0;
-		paintData.brushColor = brushColor;
-		paintData.x = mouseX;
-		paintData.y = mouseY;
 
 		const data = JSON.stringify(paintData);
 		socket.send(data);
 	};
 
-	const startLine = (e) => {
+	const startLine = (e: MouseEvent) => {
 		setIsDrawing(true);
 		handleDraw(e);
 	};
@@ -74,9 +63,9 @@ const Canvas = ({ canvasRef, socket }) => {
 			<ColorPalette setBrushColor={setBrushColor} />
 			<canvas
 				ref={canvasRef}
-				onMouseDown={startLine}
+				onMouseDown={() => startLine}
 				onMouseUp={finishLine}
-				onMouseMove={handleDraw}
+				onMouseMove={() => handleDraw}
 				height={400}
 				width={400}
 			></canvas>
